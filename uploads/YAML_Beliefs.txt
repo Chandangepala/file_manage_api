@@ -1,0 +1,17 @@
+app:
+  beliefs:
+    Battery:
+      name: Battery
+      value: "signalEnvironment.getBatteryLevel()"
+    SignalStrength:
+      name: SignalStrength
+      value: "signalEnvironment.getSignalStrength()"s
+    DataRate:
+      name: DataRate
+      value: "signalEnvironment.getDataRate()"
+    CQI:
+      name: CQI
+      value: "signalEnvironment.getCQI()"
+    LOS:
+      name: LOS
+      value: "signalEnvironment.isLOS()"
