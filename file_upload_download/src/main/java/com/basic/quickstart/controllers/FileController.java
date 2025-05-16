@@ -1,5 +1,6 @@
-package com.basic.quickstart;
+package com.basic.quickstart.controllers;
 
+import com.basic.quickstart.model.FileUploadResponse;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -16,7 +17,7 @@ import java.nio.file.StandardCopyOption;
 
 @RestController
 @RequestMapping("/api/files")
-public class FileDownloadController {
+public class FileController {
 
     private static final String UPLOAD_DIR = "uploads";
 
@@ -32,7 +33,7 @@ public class FileDownloadController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<FileUploadResponse> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
             // Ensure the directory exists
             Path uploadPath = Paths.get(UPLOAD_DIR);
@@ -44,10 +45,18 @@ public class FileDownloadController {
             Path filePath = uploadPath.resolve(file.getOriginalFilename());
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            return ResponseEntity.ok("File uploaded successfully: " + file.getOriginalFilename());
+            FileUploadResponse response = new FileUploadResponse(
+                    file.getOriginalFilename(),
+                    "File uploaded successfully",
+                    true);
+            return ResponseEntity.ok(response);
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body("File upload failed!");
+            FileUploadResponse response = new FileUploadResponse(
+                    file.getOriginalFilename(),
+                    "File uploaded failed!",
+                    false);
+            return ResponseEntity.status(500).body(response);
         }
     }
 }
